@@ -1,25 +1,40 @@
 " Author : Liang, Jian <liangjian_2001@126.com>
 " 	Customize vim environment for easy using
 
+" encoding设定一定要放最前面
+set encoding=utf-8
+set langmenu=zh_CN.UTF-8
+language message zh_CN.UTF-8
+" set langmenu=en_US.UTF-8
+" language message en_US.UTF-8
+set fileencodings=ucs-bom,utf-8,cp936
+" set fileencodings=ucs-bom,utf-8,utf-16le,cp936
+
+" set mouse=a
+set incsearch
+
+" in windows OS
+let s:ismswin=has('win32')
+
+if s:ismswin
+	set guifont=新宋体:h15:cGB2312
+else
+	set guifont&
+	"set guifont=FZSongTi\ 12
+endif
 "================== basic environment{{{
 set tabstop=4
 set shiftwidth=4
 set autoindent
 
-set encoding=utf-8
-"set langmenu=zh_CN.UTF-8
-" language message zh_CN.UTF-8
-set langmenu=en_US.UTF-8
-language message en_US.UTF-8
-set fileencodings=ucs-bom,utf-8,cp936,utf-16le
 
 set nowrap
 
 " for vim under win32 command (my command window using white background)
 " ! has("gui_running")
-if &term == "win32" 
-	colorscheme peachpuff
-endif
+" if s:ismswin
+" 	colorscheme peachpuff
+" endif
 
 set display+=lastline
 " uhex
@@ -30,11 +45,15 @@ set display+=lastline
 " 结束: redir end 
 
 set nocompatible
-source $VIMRUNTIME/vimrc_example.vim
-source $VIMRUNTIME/mswin.vim
-behave mswin
-" 恢复向上浏览功能(否则被mswin映射成redo)
-unmap <C-Y>
+if s:ismswin
+	source $VIMRUNTIME/vimrc_example.vim
+	source $VIMRUNTIME/mswin.vim
+	behave mswin
+	" 恢复向上浏览功能(否则被mswin映射成redo)
+	unmap <C-Y>
+	" 恢复增加数字，不作全选
+	unmap <C-A>
+endif
 
 " 恢复ctrl-A 的原始功能：与ctrl-x对应为增加或减少数值
 " unmap <C-A>
@@ -44,8 +63,12 @@ set nrformats=alpha
 " don't use swapfile (equal to: vi -n <file>)
 " set updatecount=0
 " use the same swap dir
-silent! call mkdir('c:/tmp')
-set dir=c:\tmp
+if s:ismswin
+	silent! call mkdir('c:/tmp')
+	set dir=c:\tmp
+else
+	set dir=/tmp
+endif
 
 " 如果要打开大文件：
 " 1. syntax off
@@ -80,14 +103,14 @@ nmap <C-CR> i<CR><ESC>
 vmap <Enter> y:let @/=@0<CR>
 
 " move cursor in insert mode without leaving main keyboard
-if &term != "win32"
+"if s:ismswin
 	imap <C-H> <Left>
 	imap <C-L> <Right>
 	" imap <C-J> <Down>
 	" imap <C-K> <Up>
 	imap <C-J> <c-o>gj
 	imap <C-K> <c-o>gk
-endif	
+"endif	
 imap <C-D> <Delete>
 
 " simple alias to move between windows
@@ -95,6 +118,10 @@ nmap <C-J> <C-W>j
 nmap <C-K> <C-W>k
 nmap <C-H> <C-W>h
 nmap <C-L> <C-W>l
+
+nmap + <c-w>+
+nmap - <c-w>-
+nmap _ <c-w>>
 
 " alt-j/k: move based on screen line
 nmap <m-j> gj
@@ -165,21 +192,26 @@ au FileType html,xml,xslt setl ts=2 sw=2
 autocmd BufNewFile,BufRead *.json set ft=javascript
 
 " ---- set tab and shift width
-function SetTs(ts)
+function! SetTs(ts)
 	let cmd = "set tabstop=" . a:ts . " | set shiftwidth=" . a:ts 
 	exe cmd
 endf
 nmap \tab :call SetTs(input("tabstop: ", 2))<CR>
 
 " ------ vimrc
+if s:ismswin
 " edit vimrc
 nmap \rc :e $VIM/_vimrc<CR>
 " apply vimrc
 nmap \RC :silent! source $VIM/_vimrc<CR>
+else
+	nmap \rc :e ~/.vimrc<CR>
+	nmap \RC :silent! source ~/.vimrc<CR>
+endif
 
 " ------ set syntax
 " syntax to ... (customised)
-function SetSyn(syn)
+function! SetSyn(syn)
 	" 方法一
 " 	exe ':syntax clear'
 " 	exe ':ru! syntax/' . a:syn . '.vim'
@@ -189,7 +221,7 @@ function SetSyn(syn)
 
  	echo 'Load "' . a:syn . '.vim".'
 endf
-function SelectSyn()
+function! SelectSyn()
 	let syn = input('Sync: ', 'cpp')
 	call SetSyn(syn)
 endfunction
@@ -215,7 +247,9 @@ set novb
 
 " don't show gui toolbar
 set guioptions-=T
-set guioptions+=bh " bottom horizontal scrollbar
+if s:ismswin
+	set guioptions+=bh " bottom horizontal scrollbar
+endif
 " set guioptions-=m  " menu
 " let did_install_syntax_menu = 0
 
@@ -225,6 +259,7 @@ set laststatus=2
 set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 
 " ========= for vim7.0 diff
+if s:ismswin
 set diffexpr=MyDiff()
 function MyDiff()
   let opt = '-a --binary '
@@ -249,7 +284,7 @@ function MyDiff()
   endif
   silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3 . eq
 endfunction
-
+endif
 " ========= for vim7.0 关键字补全 (默认completeopt=menu,preview)
 " 不扫描include文件以节约时间
 set complete-=i
@@ -264,6 +299,11 @@ inoremap <C-F>             <C-X><C-F>
 " eval this line
 nmap \E o<c-r>=string(eval(getline(line('.')-1)))<cr><esc>0
 vmap \E yo<c-r>=string(<c-r>0)<cr><esc>0
+
+if has('conceal')
+	set conceallevel=1
+	set concealcursor=n
+endif
 "}}}
 
 "================== for developers{{{
@@ -275,11 +315,14 @@ nmap <silent> s<F9> :if SetRunProg() \| call RunProg(0) \| endif<CR>
 nmap <silent> <F9> :call RunProg(0)<CR>
 
 " view terminal screen
-" in windows OS
+if s:ismswin
 nmap <silent> <F12> :!start cmd<CR>
 nmap <silent> \exp :!start explorer %:p:h<CR>
+else
 " in linux
-" nmap <F12> :!<CR> 
+nmap <silent><F12> :!sh<CR> 
+nmap <silent> \exp :!nautilus %:p:h &<CR>
+endif
 
 " run program and echo the result in VI : \r (cannot be a interactive program!)
 " nmap \r :call RunProg(1)<CR>
@@ -374,7 +417,7 @@ endfunction
 nmap <C-F9> :update \| make<CR>
 
 " save and make itself: r<F9>
-nmap r<F9> :update \| make %:r<CR>
+nmap r<F9> :w! \| make %:r<CR>
 
 " rebuild: ctrl-shift-<F9>
 "nmap <C-S-F9> :update \| make clean<CR> \| make
@@ -393,7 +436,7 @@ function! SetCommentStr()
 	let ext = tolower(expand("%:e"))
 " 	if ext == 'pl' || ext == 'pm' || ext == 'cfg' || ext == 'txt'
 " 		let g:comment_str = '#'
-	if ext == 'c' || ext == 'cpp' || ext == 'h' || ext == 'cc' || ext == 'c++'
+	if ext == 'c' || ext == 'cpp' || ext == 'h' || ext == 'cc' || ext == 'c++' || ext == 'groovy'
 		let g:comment_str = '//'
 	elseif ext == 'vbs' || ext == 'bas'
 		let g:comment_str = "'"
@@ -439,7 +482,7 @@ nmap s// :call SetCommentStr() \| echo 'ok'<CR>
 "}}}
 
 " ---------- .h .c/.cpp 切换"{{{
-function Switch_c_h(b_newwin)
+function! Switch_c_h(b_newwin)
 	let cmd = (a:b_newwin || &modified ? 'new ': 'n ')
 	if expand("%:e") == "h"
 		for e in [".c", ".cpp", ".cc", ".C"]
@@ -464,6 +507,7 @@ nmap <silent> \G :call Switch_c_h(1)<CR>
 " ------------tags {{{
 " make tag; require: ctags
 nmap \tag :!ctags *<CR>
+nmap \ttag :!ctags %:h/*<CR>
 " make perl tag; require: pltags
 nmap \ptag :!pltags.pl %<CR>
 
@@ -601,7 +645,7 @@ nmap \ze :set foldmethod=manual<CR>
 " use zE to eliminate all the folds
 " to use perl syntax-fold: 1) modify perl.vim, enable "perl-fold" 2) set foldmethod=syntax
 
-function RegionFold()
+function! RegionFold()
 	let start_regex = input("start regex: ", "^{")
 	let end_regex   = input("end regex: ", "^}")
 	let cmd = ':syn region myFold keepend start=/' . start_regex . '/ end=/' . end_regex . '/ transparent fold'
@@ -684,7 +728,7 @@ vmap \K y:silent !start _start http://www.google.com/search?q=<c-r>=substitute(@
 
 " open firefox
 " require: d:\bat\ff.lnk and .lnk is in PATHEXT
-nmap \ff :silent !start _start ff<cr>
+"nmap \ff :silent !start _start ff<cr>
 
 "}}}
 "}}}
@@ -704,42 +748,87 @@ syn keyword Title RTEST_INIT RTEST_BEGIN RTEST_END RTEST_TERM
 " ------ including path and adding tags {{{
 "let $VC6='C:/Program\ Files/Microsoft\ Visual\ Studio/VC98'
 "set path+=$VC6\INCLUDE,$VC6\ATL\INCLUDE,$VC6\MFC\INCLUDE
-let $VC8='d:/Program\ Files/Microsoft\ Visual\ Studio\ 8/VC'
-set path+=$VC8/include/**,$VC8/PlatformSDK/Include/**,$VC8/atlmfc/include/**
-let $GCC='d:/mingw/include'
-set path+=$GCC/**
+" let $VC8='d:/Program\ Files/Microsoft\ Visual\ Studio\ 8/VC'
+" set path+=$VC8/include/**,$VC8/PlatformSDK/Include/**,$VC8/atlmfc/include/**
+" let $GCC='d:/mingw/include'
+" set path+=$GCC/**
 " set path+=D:\vc7\include
 " set path+=d:\dev-cpp\include,d:\dev-cpp\include\c++\3.4.2
 " set path+=d:\software\ace_wrappers
 " set path+=$ACE_ROOT
 " set path+=d:\dev-cpp\include,d:\dev-cpp\include\g++-3
-" set path+=/usr/include/c++/3.2.3
+set path+=/usr/include/c++/4.3
 " set path+=/opt/hp93000/soc/com/include,/opt/hp93000/soc/prod_com/include,/opt/hp93000/soc/pws/include,/opt/hp93000/soc/mix_sgnl/include,/opt/hp93000/soc/pws/lib,/opt/hp93000/soc/prod_com/include/MAPI,/opt/hp93000/soc/formatter/include,/opt/hp93000/soc/fw/include,/opt/hp93000/soc/fw/hpl/include
 
 " set tag+=/home/tags/tags
-set tag+=d:/bat/tags
+" set tag+=d:/bat/tags
 " e.g. refer to d:\bat\make_tags.bat
 " ctags --c-types=+p -o d:\bat\tags ^
 " 	D:\Dev-Cpp\include\*.h ^
 " 	D:\Dev-Cpp\include\sys\*.h ^
 " 	D:\Dev-Cpp\include\C++\3.4.2\*
 
-" for SAP B1 
-let $B1_APP='E:\project\3230\BUSMB_B1\SBO\2006A_COR\Application'
-set path+=$B1_APP/*/Hdr,$B1_APP/Tools/Headers,$B1_APP/InfraStructure/SDK/Include
-" set tag+=d:/bat/b1_tags
-
 " }}}
 
+if !s:ismswin
+	imap <C-V> <C-R>+
+	imap <S-Insert> <C-R>+
+endif
 " -------- 其它常用功能
-nmap \1 :MyProjectsToggle<cr>
+" for SAP B1 
+set path+=$SBO_BASE/Source/Infrastructure/**,$SBO_BASE/Source/Client/**,$SBO_BASE/Source/ThirdParty/**
+"set tag+=d:/bat/b1_tags
+set tags+=~/data/b1_tags
 
+" nmap \1 :MyProjectsToggle<cr>
+nmap \1 :sf %:t:r.h<cr>
+nmap \2 :VGdb printf "%ls", <c-r><c-w>.GetBuffer()<cr>
+nmap \cs :cs add $SBO_BASE/cscope.out $SBO_BASE -C \| set cscopetag <cr>
 " 自动载入vimprojects文件
 "nmap <silent> \` :Project E:\projects\prof_yao\EHR\EHR_asp\vimprojects<CR><CR>
 
 " 加载javascript格式
 "nmap \1 :syntax clear \| :ru! syntax/javascript.vim<cr> \| :echo "ok"<cr>
 
+nmap \fb :FufBuffer!<cr>
+nmap \ff :FufFile!<cr>
+"nmap \ft :FufTag!<cr>
+nmap \ft :cs f t 
+
+if s:ismswin || has('gui')
+	nmap \FF :call setreg("+", expand("%:p"))<CR>
+else
+	nmap \FF :call setreg("0", expand("%:p"))<CR>
+endif
+
+set spellfile=spell.add
+set spc=
+
+" for tag
+" nmap g] g<c-]>
+" nmap <c-]> g<c-]>
+
+nmap \p4 :!p4 edit "%:p"<cr>
+nmap \dv :VGdb dv <c-r><c-w><cr>
+
+" nmap \9 :syn match H1 "\v^.+[/]\ze[^/]+\|" conceal \| set conceallevel=1 \| set concealcursor=nv
+
 "}}}
 
-" vim: set foldmethod=marker : cms="%s
+nmap \md :!pandoc -f markdown -t html -s -o %:r.html % <cr>
+nmap \vmb :let g:vimball_home='.' \| %MkVimball! 1 <cr>
+
+" for markdown plugin
+"let g:vim_markdown_folding_style_pythonic = 1
+let g:vim_markdown_toc_autofit = 1
+let g:vim_markdown_emphasis_multiline = 0
+
+" markdown + taglist + ctags for markdown/vimwiki
+let Tlist_Ctags_Cmd="perl d:/bat/ctags1.pl"
+let tlist_markdown_settings="markdown;h:标题"
+let tlist_vimwiki_settings="wiki;h:标题"
+
+" for vimwiki
+filetype plugin on
+let g:vimwiki_html_header_numbering=2
+let g:vimwiki_folding='expr'
