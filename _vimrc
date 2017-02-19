@@ -1,7 +1,6 @@
-" Author : Liang, Jian <liangjian_2001@126.com>
-" 	Customize vim environment for easy using
+" Author : skyshore <skyshore@126.com>
 
-" encodingÉè¶¨Ò»¶¨Òª·Å×îÇ°Ãæ
+" encodingè®¾å®šä¸€å®šè¦æ”¾æœ€å‰é¢
 set encoding=utf-8
 set langmenu=zh_CN.UTF-8
 language message zh_CN.UTF-8
@@ -17,18 +16,46 @@ set incsearch
 let s:ismswin=has('win32')
 
 if s:ismswin
-	set guifont=ĞÂËÎÌå:h15:cGB2312
+	set guifont=æ–°å®‹ä½“:h12:cGB2312
 else
 	set guifont&
 	"set guifont=FZSongTi\ 12
 endif
+
 "================== basic environment{{{
 set tabstop=4
 set shiftwidth=4
 set autoindent
-
-
+set foldcolumn=1
 set nowrap
+
+" set ignorecase as default, will affect search && auto complete && tag jump...
+set ignorecase
+set smartcase
+
+" ---- from vim62 to vim63:
+set hlsearch
+set backspace=indent,eol,start
+syntax on
+
+set nobackup
+set nowritebackup
+
+" don't use visual beep in gui
+set novb
+
+" don't show gui toolbar
+set guioptions-=T
+if s:ismswin
+	set guioptions+=bh " bottom horizontal scrollbar
+endif
+" set guioptions-=m  " menu
+" let did_install_syntax_menu = 0
+
+" always show status bar
+set laststatus=2
+" status bar format
+set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 
 " for vim under win32 command (my command window using white background)
 " ! has("gui_running")
@@ -39,25 +66,23 @@ set nowrap
 set display+=lastline
 " uhex
 
-" È±Ê¡ÃüÁîÊä³öµ½@zÖĞ
-" ¿ªÊ¼: redir @z
+" ç¼ºçœå‘½ä»¤è¾“å‡ºåˆ°@zä¸­
+" å¼€å§‹: redir @z
 " to retrive: ctrl-r ctrl-o z 
-" ½áÊø: redir end 
+" ç»“æŸ: redir end 
 
 set nocompatible
 if s:ismswin
 	source $VIMRUNTIME/vimrc_example.vim
 	source $VIMRUNTIME/mswin.vim
 	behave mswin
-	" »Ö¸´ÏòÉÏä¯ÀÀ¹¦ÄÜ(·ñÔò±»mswinÓ³Éä³Éredo)
+	" æ¢å¤å‘ä¸Šæµè§ˆåŠŸèƒ½(å¦åˆ™è¢«mswinæ˜ å°„æˆredo)
 	unmap <C-Y>
-	" »Ö¸´Ôö¼ÓÊı×Ö£¬²»×÷È«Ñ¡
+	" æ¢å¤ctrl-A çš„åŸå§‹åŠŸèƒ½ï¼šä¸ctrl-xå¯¹åº”ä¸ºå¢åŠ æˆ–å‡å°‘æ•°å€¼
 	unmap <C-A>
 endif
 
-" »Ö¸´ctrl-A µÄÔ­Ê¼¹¦ÄÜ£ºÓëctrl-x¶ÔÓ¦ÎªÔö¼Ó»ò¼õÉÙÊıÖµ
-" unmap <C-A>
-" ÔÊĞí×ÖÄ¸++»ò--
+" å…è®¸å­—æ¯++æˆ–--
 set nrformats=alpha
 
 " don't use swapfile (equal to: vi -n <file>)
@@ -66,20 +91,28 @@ set nrformats=alpha
 if s:ismswin
 	silent! call mkdir('c:/tmp')
 	set dir=c:\tmp
+	set undodir=c:\tmp
 else
 	set dir=/tmp
+	set undodir=/tmp
 endif
 
-" Èç¹ûÒª´ò¿ª´óÎÄ¼ş£º
+" å¦‚æœè¦æ‰“å¼€å¤§æ–‡ä»¶ï¼š
 " 1. syntax off
-" 2. set noswapfile "¸ÃÑ¡ÏîÖ»×÷ÓÃÓÚµ±Ç°buffer
+" 2. set noswapfile "è¯¥é€‰é¡¹åªä½œç”¨äºå½“å‰buffer
 " 3. set mm=2000000 mmt=2000000
-" È»ºóÔÙ¼ÓÔØ
-" ÉèÖÃµ¥¸öbufµÄmaxmemÎª×î´ó(2G)£¬ÒÔ±ã´ò¿ª´óĞÍÎÄ±¾ÎÄ¼ş
-" Èç¹û½ûÓÃswapfileÔò´ïµ½×î´óÄÚ´æºó±¨´íËµÄÚ´æ²»×ã
+" ç„¶åå†åŠ è½½
+" è®¾ç½®å•ä¸ªbufçš„maxmemä¸ºæœ€å¤§(2G)ï¼Œä»¥ä¾¿æ‰“å¼€å¤§å‹æ–‡æœ¬æ–‡ä»¶
+" å¦‚æœç¦ç”¨swapfileåˆ™è¾¾åˆ°æœ€å¤§å†…å­˜åæŠ¥é”™è¯´å†…å­˜ä¸è¶³
 " set mm=2000000 mmt=2000000
 
-" ²é¿´»ò±à¼­¶ş½øÖÆÎÄ¼ş
+if has('conceal')
+	set conceallevel=1
+	set concealcursor=n
+endif
+
+
+" æŸ¥çœ‹æˆ–ç¼–è¾‘äºŒè¿›åˆ¶æ–‡ä»¶
 "nmap \bin :lang C \| set encoding=latin1 display+=uhex \| n ++bin ++enc=latin1 %<cr>
 nmap \bin :set binary noeol display+=uhex<cr>
 
@@ -87,18 +120,15 @@ nmap \bin :set binary noeol display+=uhex<cr>
 nmap <C-W>O :only!<CR>
 	
 " quit without save; !!! override the default <C-W>q to :q!
-nmap <C-W>q :q!<CR>
+"nmap <C-W>q :q!<CR>
 
-" set ignorecase as default, will affect search && auto complete && tag jump...
-set ignorecase
-set smartcase
 " switch option ignorecase
 nmap \ic :set ignorecase!<cr>:set ignorecase?<cr>
 
 " simulate <enter> in normal mode: by ctrl-enter
 nmap <C-CR> i<CR><ESC>
 
-" search after select in visual mode: by <Enter> key (<cword>±íÊ¾¹â±ê´¦µÄ´Ê£¬²»ÊÊÓÃ)
+" search after select in visual mode: by <Enter> key (<cword>è¡¨ç¤ºå…‰æ ‡å¤„çš„è¯ï¼Œä¸é€‚ç”¨)
 "vmap <Enter> y:let @/=getreg('0')<CR>
 vmap <Enter> y:let @/=@0<CR>
 
@@ -128,14 +158,14 @@ nmap <m-j> gj
 nmap <m-k> gk
 
 " reload/refresh currect file
-" Shift-F5 Ä¬ÈÏ±àÂëÖØĞÂ¼ÓÔØ
+" Shift-F5 é»˜è®¤ç¼–ç é‡æ–°åŠ è½½
 nmap <S-F5> :n! %<cr>
-" F5:Ñ¡Ôñunicode±àÂëÖØĞÂ¼ÓÔØ
+" F5:é€‰æ‹©unicodeç¼–ç é‡æ–°åŠ è½½
 nmap <F5> :call LoadFileEnc('')<cr>
-" C-S-F5:Ê×´ÎÊ¹ÓÃ¿ÉÑ¡Ôñ±àÂë; ÔÙ´ÎÊ¹ÓÃÊ±ÓÃÉÏ´ÎÑ¡ÔñµÄunicode±àÂë
+" C-S-F5:é¦–æ¬¡ä½¿ç”¨å¯é€‰æ‹©ç¼–ç ; å†æ¬¡ä½¿ç”¨æ—¶ç”¨ä¸Šæ¬¡é€‰æ‹©çš„unicodeç¼–ç 
 nmap <C-S-F5> :call LoadFileEnc('auto')<cr>
 
-" argÎª''Ê±ÔÊĞíÑ¡Ôñ±àÂë
+" argä¸º''æ—¶å…è®¸é€‰æ‹©ç¼–ç 
 fu! LoadFileEnc (arg)
 	if a:arg == '' || !exists('g:last_enc')
 		let enc_ls = ['utf8', 'ucs-2le', 'ucs-2be', 'cp936']
@@ -158,7 +188,7 @@ nmap \uni :set encoding=utf-8<CR>:language message zh_CN.UTF-8<CR>:n! %<CR>
 " language message zh_CN.UTF-8
 
 " save file
-map <C-S> :up!<CR>
+"map <C-S> :up!<CR>
 
 " set nowrap and wrap
 nmap <F11> :set nowrap<CR>
@@ -168,14 +198,14 @@ nmap <S-F11> :set wrap<CR>
 nmap \sav :mksession!<CR>
 nmap \lod :so Session.vim<CR>
 
-" Ö§³ÖÌø×ªµ½ÎÄ¼şĞĞºÅ (¶Ôaa.txt:100 °´gF, ^W-F¿ÉÌø×ªÖÁĞĞºÅ)
+" æ”¯æŒè·³è½¬åˆ°æ–‡ä»¶è¡Œå· (å¯¹aa.txt:100 æŒ‰gF, ^W-Få¯è·³è½¬è‡³è¡Œå·)
 " set isfname-=:
-" Èç¹ûÕâÑùÉèÖÃ£¬Ôò c:\aa.txt ÕâÑùµÄÎÄ¼şÎŞ·¨Ìø×ª
+" å¦‚æœè¿™æ ·è®¾ç½®ï¼Œåˆ™ c:\aa.txt è¿™æ ·çš„æ–‡ä»¶æ— æ³•è·³è½¬
 
 " Rename: e.g. Ren aaa.txt
 command! -nargs=1 -complete=file Ren if rename(expand("%"), "<args>")==0 | n <args> | else | echo "FAIL" | endif
 
-" insertÄ£Ê½ÏÂ<F5>²åÈëÈÕÆÚ(ÏñnotepadÖĞÒ»Ñù)
+" insertæ¨¡å¼ä¸‹<F5>æ’å…¥æ—¥æœŸ(åƒnotepadä¸­ä¸€æ ·)
 "imap <F5> <esc>:call append(".", [strftime("%Y/%m/%d %X")])<cr>JA
 imap <F5> <C-R>=strftime("%Y/%m/%d %X")<cr>
 
@@ -212,11 +242,11 @@ endif
 " ------ set syntax
 " syntax to ... (customised)
 function! SetSyn(syn)
-	" ·½·¨Ò»
+	" æ–¹æ³•ä¸€
 " 	exe ':syntax clear'
 " 	exe ':ru! syntax/' . a:syn . '.vim'
 
-	" ·½·¨¶ş
+	" æ–¹æ³•äºŒ
 	exe "set syntax=". a:syn
 
  	echo 'Load "' . a:syn . '.vim".'
@@ -234,76 +264,21 @@ nmap \ksyn :syn keyword Type
 " customize syntax "match" element 
 nmap \msyn :syn match Title /p/
 
-" ---- from vim62 to vim63:
-set hlsearch
-set backspace=indent,eol,start
-syntax on
-
-set nobackup
-set nowritebackup
-
-" don't use visual beep in gui
-set novb
-
-" don't show gui toolbar
-set guioptions-=T
-if s:ismswin
-	set guioptions+=bh " bottom horizontal scrollbar
-endif
-" set guioptions-=m  " menu
-" let did_install_syntax_menu = 0
-
-" always show status bar
-set laststatus=2
-" status bar format
-set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
-
-" ========= for vim7.0 diff
-if s:ismswin
-set diffexpr=MyDiff()
-function MyDiff()
-  let opt = '-a --binary '
-  if &diffopt =~ 'icase' | let opt = opt . '-i ' | endif
-  if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
-  let arg1 = v:fname_in
-  if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
-  let arg2 = v:fname_new
-  if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
-  let arg3 = v:fname_out
-  if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
-  let eq = ''
-  if $VIMRUNTIME =~ ' '
-    if &sh =~ '\<cmd'
-      let cmd = '""' . $VIMRUNTIME . '\diff"'
-      let eq = '"'
-    else
-      let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
-    endif
-  else
-    let cmd = $VIMRUNTIME . '\diff'
-  endif
-  silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3 . eq
-endfunction
-endif
-" ========= for vim7.0 ¹Ø¼ü×Ö²¹È« (Ä¬ÈÏcompleteopt=menu,preview)
-" ²»É¨ÃèincludeÎÄ¼şÒÔ½ÚÔ¼Ê±¼ä
+" ========= for vim7.0 å…³é”®å­—è¡¥å…¨ (é»˜è®¤completeopt=menu,preview)
+" ä¸æ‰«æincludeæ–‡ä»¶ä»¥èŠ‚çº¦æ—¶é—´
 set complete-=i
-" ²»É¨Ãètag. tagÓÉ<C-]>¶ø·Ç<C-N>Íê³É
+" ä¸æ‰«ætag. tagç”±<C-]>è€Œé<C-N>å®Œæˆ
 set complete-=t
 " set completeopt=
-" ÓÃtag²¹È«
+" ç”¨tagè¡¥å…¨
 inoremap <C-]>             <C-X><C-]>
-" ²¹È«ÎÄ¼şÃû
+" è¡¥å…¨æ–‡ä»¶å
 inoremap <C-F>             <C-X><C-F>
 
 " eval this line
 nmap \E o<c-r>=string(eval(getline(line('.')-1)))<cr><esc>0
 vmap \E yo<c-r>=string(<c-r>0)<cr><esc>0
 
-if has('conceal')
-	set conceallevel=1
-	set concealcursor=n
-endif
 "}}}
 
 "================== for developers{{{
@@ -417,7 +392,20 @@ endfunction
 nmap <C-F9> :update \| make<CR>
 
 " save and make itself: r<F9>
-nmap r<F9> :w! \| make %:r<CR>
+" nmap r<F9> :w! \| make %:r<CR>
+nmap r<F9> :call MakeOne()<cr>
+
+function! MakeOne()
+	up!
+	let ext = tolower(expand("%:e"))
+	if ext == "md"
+		let ext = "html"
+	else
+		make %:r
+		return
+	endif
+	exe "make %:r." . ext
+endfunction
 
 " rebuild: ctrl-shift-<F9>
 "nmap <C-S-F9> :update \| make clean<CR> \| make
@@ -427,7 +415,7 @@ nmap <M-F9> :update \| make %:r.o<cr>
 
 " pre-compile: \cpp
 nmap \cpp :let f=expand('%') \| new \| exe ":r! cpp " . f<cr>
-" Ïàµ±ÓÚ°´<F2>ºóÊäÈë cpp %
+" ç›¸å½“äºæŒ‰<F2>åè¾“å…¥ cpp %
 "}}}
 " --------- auto comment \\ {{{
 " using g:comment_str
@@ -481,7 +469,7 @@ vmap \/d :call Comment('remove') \| echo 'ok'<CR>
 nmap s// :call SetCommentStr() \| echo 'ok'<CR>
 "}}}
 
-" ---------- .h .c/.cpp ÇĞ»»"{{{
+" ---------- .h .c/.cpp åˆ‡æ¢"{{{
 function! Switch_c_h(b_newwin)
 	let cmd = (a:b_newwin || &modified ? 'new ': 'n ')
 	if expand("%:e") == "h"
@@ -511,10 +499,10 @@ nmap \ttag :!ctags %:h/*<CR>
 " make perl tag; require: pltags
 nmap \ptag :!pltags.pl %<CR>
 
-" visualÄ£Ê½ÏÂÑ¡ÔñÒ»¸ö´Ê×÷Îªtag
+" visualæ¨¡å¼ä¸‹é€‰æ‹©ä¸€ä¸ªè¯ä½œä¸ºtag
 vmap <c-w>] y:exe "stag " . @0<CR>
 " vmap <c-]> y:exe "tag " . @0<CR> 
-" c-]ÒÑ¾­Ö§³ÖvisualÁË
+" c-]å·²ç»æ”¯æŒvisualäº†
 
 "}}}
 
@@ -542,40 +530,40 @@ set cink-=0#
 set cscopequickfix=g-,s-,t-,e-,i-,d-,c-
 " f-
 
-" ´´½¨ÎÄ¼şÁĞ±ícscope.files:  dir /s /b *.h *.c *.cpp > cscope.files
-" Èç¹ûÏëÓÃÏà¶ÔÂ·¾¶, ´ò¿ªcscope.files½«Ç°Ãæ¹Ì¶¨²¿·ÖÉ¾³ı¡£
+" åˆ›å»ºæ–‡ä»¶åˆ—è¡¨cscope.files:  dir /s /b *.h *.c *.cpp > cscope.files
+" å¦‚æœæƒ³ç”¨ç›¸å¯¹è·¯å¾„, æ‰“å¼€cscope.fileså°†å‰é¢å›ºå®šéƒ¨åˆ†åˆ é™¤ã€‚
 "
-" ´´½¨·ûºÅ¿â(Ê¹ÓÃcscope.filesÖĞµÄÎÄ¼ş, ·ñÔòÓ¦¸ÃÓÃ-R²ÎÊı): cscope -bkq
+" åˆ›å»ºç¬¦å·åº“(ä½¿ç”¨cscope.filesä¸­çš„æ–‡ä»¶, å¦åˆ™åº”è¯¥ç”¨-Rå‚æ•°): cscope -bkq
 "
 " refer to: http://blog.csdn.net/easwy/archive/2007/04/03/1550585.aspx
 " download (windows version): http://iamphet.nm.ru/cscope/
 
-" ¼ÓÔØ·ûºÅ¿â: Ö¸¶¨µ±Ç°·ûºÅÎÄ¼ş(-f cscope.out)¼°´úÂëÖ÷Ä¿Â¼(-P ...), ²¢ºöÂÔ´óĞ¡Ğ´(-C)
-" Èç¹û[pre-dir]ÖĞÓĞ¿Õ¸ñ£¬»áÓĞÂé·³£¬ÀıÈç"O Gen", Ó¦¸ÃĞ´³Édos8.3ÎÄ¼ş¸ñÊ½£¬Îª"OGen~1"
+" åŠ è½½ç¬¦å·åº“: æŒ‡å®šå½“å‰ç¬¦å·æ–‡ä»¶(-f cscope.out)åŠä»£ç ä¸»ç›®å½•(-P ...), å¹¶å¿½ç•¥å¤§å°å†™(-C)
+" å¦‚æœ[pre-dir]ä¸­æœ‰ç©ºæ ¼ï¼Œä¼šæœ‰éº»çƒ¦ï¼Œä¾‹å¦‚"O Gen", åº”è¯¥å†™æˆdos8.3æ–‡ä»¶æ ¼å¼ï¼Œä¸º"OGen~1"
 nmap \csa :cs add cscope.out <c-r>=getcwd()<cr> -C<cr>
-" ¹Ø±Õ·ûºÅ¿â
+" å…³é—­ç¬¦å·åº“
 nmap \csk :cs kill -1<CR>
 
-" " ²éÕÒ·ûºÅ¶¨Òå
+" " æŸ¥æ‰¾ç¬¦å·å®šä¹‰
 " nmap <c-[> :cs find g (?i)<c-r>=expand("<cword>")<cr>$<cr>
 " nmap <c-w>[ :scs find g (?i)<c-r>=expand("<cword>")<cr>$<cr>
 " vmap <c-[> y:cs find g (?i)<c-r>0$<cr>
 " vmap <c-w>[ y:scs find g (?i)<c-r>0$<cr>
 
-" Ä£ºı²éÕÒÎÄ¼ş
+" æ¨¡ç³ŠæŸ¥æ‰¾æ–‡ä»¶
 nmap \csF :cs f f .*<c-r>=expand("<cword>")<cr>.*<cr>
 nmap \csf :cs f f 
 
-" ²éÕÒ·ûºÅ(ºöÂÔ´óĞ¡Ğ´)
+" æŸ¥æ‰¾ç¬¦å·(å¿½ç•¥å¤§å°å†™)
 nmap \cs<space> :cs f g <c-r>=expand("<cword>")<cr><cr>
 nmap \csg :cs f g .*.*<left><left>
 
-" ²éÕÒµ÷ÓÃµã
+" æŸ¥æ‰¾è°ƒç”¨ç‚¹
 nmap \cs1 :cs find c <c-r>=expand("<cword>")<cr><cr>:cw<cr>
 nmap \cs! :scs find c <c-r>=expand("<cword>")<cr><cr>:cw<cr>
 vmap \cs1 y:cs find c <c-r>0<cr>:cw<cr>
 vmap \cs! y:scs find c <c-r>0<cr>:cw<cr>
-" ²éÕÒ·ûºÅÒıÓÃ
+" æŸ¥æ‰¾ç¬¦å·å¼•ç”¨
 nmap \cs2 :cs find s <c-r>=expand("<cword>")<cr><cr>:cw<cr>
 nmap \cs@ :scs find s <c-r>=expand("<cword>")<cr><cr>:cw<cr>
 vmap \cs2 y:cs find s <c-r>0<cr>:cw<cr>
@@ -603,17 +591,17 @@ nmap <silent> <C-F11> :TlistToggle<CR>
 "}}}
 
 " ------ format sql statement{{{
-" µ÷ÕûMSSQL2005 profilerÖĞ¿½±´³öÀ´µÄÓï¾ä¸ñÊ½¡£
+" è°ƒæ•´MSSQL2005 profilerä¸­æ‹·è´å‡ºæ¥çš„è¯­å¥æ ¼å¼ã€‚
 vmap \sql :call FormatSql()<cr>
 
-" Àı£ºÔ­Ê¼´®ÈçÏÂ£¬Ñ¡ÖĞºó°´ \sql ¶ÔËü½øĞĞÕûÀí
+" ä¾‹ï¼šåŸå§‹ä¸²å¦‚ä¸‹ï¼Œé€‰ä¸­åæŒ‰ \sql å¯¹å®ƒè¿›è¡Œæ•´ç†
 " exec sp_executesql N'SELECT T0.[WstCode], AVG(T1.[MaxReqr]), AVG(T0.[SortId]), T2.[Status], COUNT(T2.[Status]) FROM  [dbo].[WTM2] T0  INNER  JOIN [dbo].[OWST] T1  ON  T1.[WstCode] = T0.[WstCode]    LEFT OUTER  
 " JOIN [dbo].[WDD1] T2  ON  T2.[StepCode] = T0.[WstCode]  AND  T2.[WddCode] = 15   INNER  JOIN [dbo].[WST1] T3  ON  T3.[WstCode] = T1.[WstCode]  AND  T3.[UserID] = T2.[UserID]   WHERE T0.[WtmCode] = (@P1)   GROUP 
 " BY T0.[WstCode], T2.[Status] ORDER BY AVG(T0.[SortId]),T2.[Status] DESC',N'@P1 int',4
 
 function! FormatSql() range
  	" first merge into 1 line than do replcing:
-	" Îª·ÀÖ¹visual area±»È¡Ïû, ²Ù×÷Ç°ÏÈÓÃgvÖØÑ¡
+	" ä¸ºé˜²æ­¢visual areaè¢«å–æ¶ˆ, æ“ä½œå‰å…ˆç”¨gvé‡é€‰
 	normal gvJ
 	s/\v\c<(INSERT|UPDATE|SELECT|FROM|INNER|LEFT|RIGHT|WHERE|GROUP|ORDER|VALUES|SET|FOR)>/\r\1/g
 
@@ -695,8 +683,8 @@ map <F7> :call ToggleSketch()<CR>
 "}}}
 " --------- google search {{{
 nmap \K :silent ! start http://www.google.com/search?q=<cword><cr>
-" ×¢Òâ ! ×óÓÒÓĞ¿Õ¸ñ
-" Ó¦½øĞĞurl±àÂë
+" æ³¨æ„ ! å·¦å³æœ‰ç©ºæ ¼
+" åº”è¿›è¡Œurlç¼–ç 
 vmap \K y:silent ! start http://www.google.com/search?q=<c-r>=substitute(@0, ' ', '+', 'g')<cr><cr>
 "}}}
 " ------- spell checking : English words {{{
@@ -710,8 +698,8 @@ nmap \sca :new /tmp/words.vim<CR>
 nmap \ac :set dict=/usr/share/dict/words<CR>
 "}}}
 " --------- shell {{{
-" ×¢Òâ£º!start Óë ! start²»Í¬£¬ºóÕß²»¹ÜºóÃæÊÇÊ²Ã´ÃüÁî¶¼Òª¿ªÒ»¸öcmd´°¿Ú;
-" µ«Ç°ÕßÓĞ¸öÈ±ÏİÊÇ²»ÄÜ´ò¿ªÎÄµµ»òurl£¬Èçstart 1.txt²»¿ÉÒÔ(ÔÚcmdÖĞÔËĞĞÈ´¿ÉÒÔ)¡£ËùÒÔÊ¹ÓÃ_start.exe³ÌĞò¡£
+" æ³¨æ„ï¼š!start ä¸ ! startä¸åŒï¼Œåè€…ä¸ç®¡åé¢æ˜¯ä»€ä¹ˆå‘½ä»¤éƒ½è¦å¼€ä¸€ä¸ªcmdçª—å£;
+" ä½†å‰è€…æœ‰ä¸ªç¼ºé™·æ˜¯ä¸èƒ½æ‰“å¼€æ–‡æ¡£æˆ–urlï¼Œå¦‚start 1.txtä¸å¯ä»¥(åœ¨cmdä¸­è¿è¡Œå´å¯ä»¥)ã€‚æ‰€ä»¥ä½¿ç”¨_start.exeç¨‹åºã€‚
 " require: d:\bat\_start.exe
 
 " start program or doc (for windows)
@@ -722,8 +710,8 @@ nmap \S :silent !start _start %<cr>
 " google search
 nmap \K :silent !start _start http://www.google.com/search?q=<cword><cr>
 " nmap \K :silent ! start http://www.google.com/search?q=<cword><cr>
-" ×¢Òâ ! ×óÓÒÓĞ¿Õ¸ñ
-" Ó¦½øĞĞurl±àÂë
+" æ³¨æ„ ! å·¦å³æœ‰ç©ºæ ¼
+" åº”è¿›è¡Œurlç¼–ç 
 vmap \K y:silent !start _start http://www.google.com/search?q=<c-r>=substitute(@0, ' ', '+', 'g')<cr><cr>
 
 " open firefox
@@ -733,7 +721,7 @@ vmap \K y:silent !start _start http://www.google.com/search?q=<c-r>=substitute(@
 "}}}
 "}}}
 
-" ================== customize {{{
+" ================== customize
 " ------ old, not used{{{
 " ------- use perl to deal with data
 nmap \! :%! perl -ne "// and print"
@@ -774,7 +762,7 @@ if !s:ismswin
 	imap <C-V> <C-R>+
 	imap <S-Insert> <C-R>+
 endif
-" -------- ÆäËü³£ÓÃ¹¦ÄÜ
+" -------- å…¶å®ƒå¸¸ç”¨åŠŸèƒ½
 " for SAP B1 
 set path+=$SBO_BASE/Source/Infrastructure/**,$SBO_BASE/Source/Client/**,$SBO_BASE/Source/ThirdParty/**
 "set tag+=d:/bat/b1_tags
@@ -784,10 +772,10 @@ set tags+=~/data/b1_tags
 nmap \1 :sf %:t:r.h<cr>
 nmap \2 :VGdb printf "%ls", <c-r><c-w>.GetBuffer()<cr>
 nmap \cs :cs add $SBO_BASE/cscope.out $SBO_BASE -C \| set cscopetag <cr>
-" ×Ô¶¯ÔØÈëvimprojectsÎÄ¼ş
+" è‡ªåŠ¨è½½å…¥vimprojectsæ–‡ä»¶
 "nmap <silent> \` :Project E:\projects\prof_yao\EHR\EHR_asp\vimprojects<CR><CR>
 
-" ¼ÓÔØjavascript¸ñÊ½
+" åŠ è½½javascriptæ ¼å¼
 "nmap \1 :syntax clear \| :ru! syntax/javascript.vim<cr> \| :echo "ok"<cr>
 
 nmap \fb :FufBuffer!<cr>
@@ -813,20 +801,21 @@ nmap \dv :VGdb dv <c-r><c-w><cr>
 
 " nmap \9 :syn match H1 "\v^.+[/]\ze[^/]+\|" conceal \| set conceallevel=1 \| set concealcursor=nv
 
-"}}}
+"set tw&
+nmap \md :!pandoc -f markdown -t html -s --toc -N -o %:r.html % <cr>
 
-nmap \md :!pandoc -f markdown -t html -s -o %:r.html % <cr>
 nmap \vmb :let g:vimball_home='.' \| %MkVimball! 1 <cr>
-
 " for markdown plugin
-"let g:vim_markdown_folding_style_pythonic = 1
+let g:vim_markdown_folding_style_pythonic = 1
 let g:vim_markdown_toc_autofit = 1
 let g:vim_markdown_emphasis_multiline = 0
 
+let g:markdown_folding=1
+
 " markdown + taglist + ctags for markdown/vimwiki
 let Tlist_Ctags_Cmd="perl d:/bat/ctags1.pl"
-let tlist_markdown_settings="markdown;h:±êÌâ"
-let tlist_vimwiki_settings="wiki;h:±êÌâ"
+let tlist_markdown_settings="markdown;h:æ ‡é¢˜"
+let tlist_vimwiki_settings="wiki;h:æ ‡é¢˜"
 
 " for vimwiki
 filetype plugin on
