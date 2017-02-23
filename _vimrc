@@ -73,7 +73,6 @@ set display+=lastline
 
 set nocompatible
 if s:ismswin
-	source $VIMRUNTIME/vimrc_example.vim
 	source $VIMRUNTIME/mswin.vim
 	behave mswin
 	" 恢复向上浏览功能(否则被mswin映射成redo)
