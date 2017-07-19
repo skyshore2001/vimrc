@@ -392,18 +392,24 @@ nmap <C-F9> :update \| make<CR>
 
 " save and make itself: r<F9>
 " nmap r<F9> :w! \| make %:r<CR>
-nmap r<F9> :call MakeOne()<cr>
+nmap r<F9> :call MakeOne(0)<cr>
+nmap R<F9> :call MakeOne(1)<cr>
 
-function! MakeOne()
+function! MakeOne(force)
 	up!
 	let ext = tolower(expand("%:e"))
 	if ext == "md"
 		let ext = "html"
-	else
-		make %:r
-		return
 	endif
-	exe "make %:r." . ext
+
+	let cmd = "make %:r"
+	if ext != ""
+		let cmd .= "." . ext
+	endif
+	if a:force
+		let cmd .= " -B "
+	endif
+	exe cmd
 endfunction
 
 " rebuild: ctrl-shift-<F9>
@@ -820,3 +826,5 @@ let tlist_vimwiki_settings="wiki;h:标题"
 filetype plugin on
 let g:vimwiki_html_header_numbering=2
 let g:vimwiki_folding='expr'
+
+nmap <C-W>q :q!<cr>
