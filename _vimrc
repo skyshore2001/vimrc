@@ -398,13 +398,14 @@ nmap R<F9> :call MakeOne(1)<cr>
 function! MakeOne(force)
 	up!
 	let ext = tolower(expand("%:e"))
+	let newExt = ''
 	if ext == "md"
-		let ext = "html"
+		let newExt = "html"
 	endif
 
 	let cmd = "make %:r"
-	if ext != ""
-		let cmd .= "." . ext
+	if newExt != ""
+		let cmd .= "." . newExt
 	endif
 	if a:force
 		let cmd .= " -B "
