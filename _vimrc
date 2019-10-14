@@ -751,7 +751,7 @@ syn keyword Title RTEST_INIT RTEST_BEGIN RTEST_END RTEST_TERM
 " set path+=d:\software\ace_wrappers
 " set path+=$ACE_ROOT
 " set path+=d:\dev-cpp\include,d:\dev-cpp\include\g++-3
-set path+=/usr/include/c++/4.3
+" set path+=/usr/include/c++/4.3
 " set path+=/opt/hp93000/soc/com/include,/opt/hp93000/soc/prod_com/include,/opt/hp93000/soc/pws/include,/opt/hp93000/soc/mix_sgnl/include,/opt/hp93000/soc/pws/lib,/opt/hp93000/soc/prod_com/include/MAPI,/opt/hp93000/soc/formatter/include,/opt/hp93000/soc/fw/include,/opt/hp93000/soc/fw/hpl/include
 
 " set tag+=/home/tags/tags
@@ -770,9 +770,9 @@ if !s:ismswin
 endif
 " -------- 其它常用功能
 " for SAP B1 
-set path+=$SBO_BASE/Source/Infrastructure/**,$SBO_BASE/Source/Client/**,$SBO_BASE/Source/ThirdParty/**
+"set path+=$SBO_BASE/Source/Infrastructure/**,$SBO_BASE/Source/Client/**,$SBO_BASE/Source/ThirdParty/**
 "set tag+=d:/bat/b1_tags
-set tags+=~/data/b1_tags
+"set tags+=~/data/b1_tags
 
 " nmap \1 :MyProjectsToggle<cr>
 nmap \1 :sf %:t:r.h<cr>
