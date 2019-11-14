@@ -478,20 +478,29 @@ nmap s// :call SetCommentStr() \| echo 'ok'<CR>
 " ---------- .h .c/.cpp 切换"{{{
 function! Switch_c_h(b_newwin)
 	let cmd = (a:b_newwin || &modified ? 'new ': 'n ')
-	if expand("%:e") == "h"
-		for e in [".c", ".cpp", ".cc", ".C"]
-			let fname = expand("%:r") . e
-			if filereadable(fname)
-				exe cmd . fname
+	let ext=expand("%:e")
+	let conf=[ ["h", "hpp"], ["c", "cpp", "cc", "C"],    ["html", "wxml"], ["js"] ]
+	let i=0
+	let i1=-1
+	for arr in conf
+		for e in arr
+			if ext == e
+				let i1= i%2==0? i+1: i-1
 				break
 			endif
 		endfor
-	else
-		let fname = expand("%:r") . '.h'
+		if i1>=0
+			break
+		endif
+		let i+=1
+	endfor
+	for e in conf[i1]
+		let fname = expand("%:r") . "." . e
 		if filereadable(fname)
 			exe cmd . fname
+			break
 		endif
-	endif
+	endfor
 endfunction
 
 nmap <silent> \gg :call Switch_c_h(0)<CR>
@@ -516,9 +525,11 @@ vmap <c-w>] y:exe "stag " . @0<CR>
 " indent a C program: indent
 nmap \ind :%!indent -br -ts4 -i4 -npsl -bad  -l120<CR> " indent c programs
 " indent a xml or html file: xml_tidy
-nmap \xml :%!xml_tidy --tidy-mark no --tab-size 2 -big5 -iq -xml -wrap 256<CR>
-nmap \htm :%!xml_tidy --tidy-mark no --tab-size 2 -big5 -iq  -ashtml -wrap 256 --break-before-br yes --wrap-asp no --indent yes<CR>
-" optional : --indent yes
+"nmap \xml :%!xml_tidy --tidy-mark no --tab-size 2 -big5 -iq -xml -wrap 256<CR>
+"nmap \htm :%!xml_tidy --tidy-mark no --tab-size 2 -big5 -iq  -ashtml -wrap 256 --break-before-br yes --wrap-asp no --indent yes<CR>
+"nmap \xml :%!tidy --tidy-mark no --tab-size 2 -xml -indent --output-xml yes -wrap 256<CR>
+nmap \xml :%!tidy -xml -indent -q -wrap 256<CR>
+nmap \htm :%!tidy --fix-uri no -wrap 0 --break-before-br yes --wrap-asp no --indent auto<CR>
 
 
 " cindent option: (remove action: when type #, it indents to the line head) (help cin , help cink)
