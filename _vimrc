@@ -121,6 +121,9 @@ nmap <C-W>O :only!<CR>
 " quit without save; !!! override the default <C-W>q to :q!
 "nmap <C-W>q :q!<CR>
 
+" set ignorecase as default, will affect search && auto complete && tag jump...
+set ignorecase
+set smartcase
 " switch option ignorecase
 nmap \ic :set ignorecase!<cr>:set ignorecase?<cr>
 
