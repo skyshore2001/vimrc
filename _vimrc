@@ -843,3 +843,7 @@ let g:vimwiki_html_header_numbering=2
 let g:vimwiki_folding='expr'
 
 nmap <C-W>q :q!<cr>
+
+" for vim8
+silent! unmap <C-F>
+
