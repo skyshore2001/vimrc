@@ -26,7 +26,7 @@ endif
 set tabstop=4
 set shiftwidth=4
 set autoindent
-set foldcolumn=1
+"set foldcolumn=1
 set nowrap
 
 " set ignorecase as default, will affect search && auto complete && tag jump...
