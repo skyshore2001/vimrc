@@ -11,6 +11,7 @@ set fileencodings=ucs-bom,utf-8,cp936
 
 " set mouse=a
 set incsearch
+set cursorline
 
 " in windows OS
 let s:ismswin=has('win32')
@@ -222,6 +223,8 @@ au FileType html,xml,xslt setl ts=2 sw=2
 " au FileType jsp,php,asp set ts=2 sw=2
 
 autocmd BufNewFile,BufRead *.json set ft=javascript
+autocmd BufNewFile,BufRead *.vue set ft=html
+autocmd BufNewFile,BufRead *.jsx set ft=javascript
 
 " ---- set tab and shift width
 function! SetTs(ts)
@@ -230,6 +233,7 @@ function! SetTs(ts)
 endf
 nmap \tab :call SetTs(input("tabstop: ", 2))<CR>
 
+nmap \ts :setl ts=2 sw=2 et!<CR>
 " ------ vimrc
 if s:ismswin
 " edit vimrc
@@ -843,6 +847,8 @@ let g:vimwiki_html_header_numbering=2
 let g:vimwiki_folding='expr'
 
 nmap <C-W>q :q!<cr>
+
+set wildignore=*/node_modules/*
 
 " for vim8
 silent! unmap <C-F>
