@@ -14,7 +14,7 @@ set incsearch
 set cursorline
 
 " in windows OS
-let s:ismswin=has('win32')
+let s:ismswin=exists('$WINDIR') " dont use has('win32') as there are 'win32unix' 'win64' ...
 
 if s:ismswin
 	set guifont=新宋体:h12:cGB2312
@@ -74,7 +74,7 @@ set display+=lastline
 
 set nocompatible
 if s:ismswin
-	source $VIMRUNTIME/mswin.vim
+	" source $VIMRUNTIME/mswin.vim
 	behave mswin
 	" 恢复向上浏览功能(否则被mswin映射成redo)
 	unmap <C-Y>
@@ -90,8 +90,8 @@ set nrformats=alpha
 " use the same swap dir
 if s:ismswin
 	silent! call mkdir('c:/tmp')
-	set dir=c:\tmp
-	set undodir=c:\tmp
+	set dir=c:/tmp
+	set undodir=c:/tmp
 else
 	set dir=/tmp
 	set undodir=/tmp
