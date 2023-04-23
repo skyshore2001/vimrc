@@ -77,9 +77,9 @@ if s:ismswin
 	" source $VIMRUNTIME/mswin.vim
 	behave mswin
 	" 恢复向上浏览功能(否则被mswin映射成redo)
-	unmap <C-Y>
+	" unmap <C-Y>
 	" 恢复ctrl-A 的原始功能：与ctrl-x对应为增加或减少数值
-	unmap <C-A>
+	" unmap <C-A>
 endif
 
 " 允许字母++或--
