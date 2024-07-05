@@ -2,8 +2,8 @@
 
 " encoding设定一定要放最前面
 set encoding=utf-8
-set langmenu=zh_CN.UTF-8
-language message zh_CN.UTF-8
+"set langmenu=zh_CN.UTF-8
+"language message zh_CN.UTF-8
 " set langmenu=en_US.UTF-8
 " language message en_US.UTF-8
 set fileencodings=ucs-bom,utf-8,cp936
